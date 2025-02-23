@@ -1,7 +1,7 @@
 import { $, ShellError } from "bun";
 
 const ELASTICSEARCH_URL = "http://localhost:9200/speedtest/_doc/";
-const INTERVAL_MS = 30000;
+const INTERVAL_MS = 300000;
 const RUN_FOREVER = true;
 
 interface SpeedTestResultLatency {
@@ -55,8 +55,8 @@ async function runSpeedTest(): Promise<SpeedTestResult | undefined> {
   try {
     output = await $`speedtest -f json`.text();
     return JSON.parse(output) as SpeedTestResult;
-  } catch (err: unknown) {
-    if (err instanceof ShellError) {
+  } catch (err: any) {
+    if (err && typeof err == "object" && err.hasOwnProperty("exitCode")) {
       console.error(`Failed with code ${err.exitCode}`);
       console.error(err.stdout.toString());
       console.error(err.stderr.toString());
