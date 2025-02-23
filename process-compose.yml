@@ -1,0 +1,30 @@
+version: "0.5"
+
+processes:
+  elasticsearch:
+    command: docker compose up elasticsearch
+    shutdown:
+      command: docker compose down elasticsearch
+    readiness_probe:
+      http_get:
+        host: 127.0.0.1
+        scheme: http
+        path: "/_cluster/health"
+        port: 9200
+      initial_delay_seconds: 10
+      period_seconds: 10
+      timeout_seconds: 5
+      success_threshold: 1
+      failure_threshold: 3
+  kibana:
+    command: docker compose up kibana
+    shutdown:
+      command: docker compose down kibana
+    depends on:
+      elasticsearch:
+        condition: process_healthy
+  packetbeat:
+    command: packetbeat -c packetbeat.yml -e
+    depends on:
+      elasticsearch:
+        condition: process_healthy
