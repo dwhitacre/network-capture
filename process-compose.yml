@@ -4,7 +4,7 @@ processes:
   elasticsearch:
     command: docker compose up elasticsearch
     shutdown:
-      command: docker compose down elasticsearch
+      command: docker compose stop elasticsearch
     readiness_probe:
       http_get:
         host: 127.0.0.1
@@ -19,12 +19,12 @@ processes:
   kibana:
     command: docker compose up kibana
     shutdown:
-      command: docker compose down kibana
-    depends on:
+      command: docker compose stop kibana
+    depends_on:
       elasticsearch:
         condition: process_healthy
-  packetbeat:
-    command: packetbeat -c packetbeat.yml -e
-    depends on:
+  speedtest:
+    command: bun run index.ts
+    depends_on:
       elasticsearch:
         condition: process_healthy
