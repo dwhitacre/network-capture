@@ -2,7 +2,7 @@ import { $, ShellError } from "bun";
 
 const ELASTICSEARCH_URL = "http://localhost:9200/speedtest/_doc/";
 const INTERVAL_MS = 30000;
-const RUN_FOREVER = false;
+const RUN_FOREVER = true;
 
 interface SpeedTestResultLatency {
   low: number;
